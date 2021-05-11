@@ -36,6 +36,18 @@ fn main() {
         );
         //  Hack to clear screen no idea how it works
         print!("\x1B[2J\x1B[1;1H");
+        game_board.find_winner();
+    }
+    if game_board.winner.is_empty() {
+        println!("This match is a draw");
+    } else {
+        let winner_name: String;
+        if game_board.winner == String::from("X"){
+            winner_name = player_x.name;
+        } else {
+            winner_name = player_o.name;
+        }
+        println!("Winner is {}", winner_name);
     }
     println!("Thanks for playing :)");
 }

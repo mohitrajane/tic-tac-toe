@@ -4,8 +4,9 @@ pub struct Board {
   // &str not working here why ??
   pub current_state: Vec<Vec<String>>,
   pub current_player: String,
-  // TODO: should be not pub 
+  // TODO: should be not pub  ?
   pub no_of_moves: u8,
+  pub winner: String,
 }
 
 impl Default for Board {
@@ -14,6 +15,7 @@ impl Default for Board {
       current_state: vec![vec![String::from("");3];3],
       current_player: String::from("X"),
       no_of_moves: 0,
+      winner: String::from(""),
     }
   }
 }
@@ -57,7 +59,7 @@ impl Board {
   }
 
   pub fn is_game_over(&self) -> bool {
-    if self.no_of_moves > 8 {
+    if self.no_of_moves > 8 || self.winner != "" {
       return true
     } else {
       false
@@ -78,5 +80,45 @@ impl Board {
         println!("The position is already filled!!!\nPlease re-entry");
         thread::sleep(time::Duration::from_secs(2));
     };
+  }
+  fn is_diagonal_win(&mut self) {
+
+    if self.current_state[0][0] != "" && self.current_state[0][0] == self.current_state[1][1] && self.current_state[1][1] == self.current_state[2][2] { 
+      self.winner = self.current_state[0][0].clone();
+      // return true;
+    } else if self.current_state[0][2]!="" &&self.current_state[0][2] == self.current_state[1][1] && self.current_state[1][1] == self.current_state[2][1] { 
+      println!("ELSE IF CONDITION");
+      self.winner = self.current_state[0][2].clone();
+      // return true;
+    } else {
+      // return false;
+    }
+  }
+
+  fn is_across_win(&mut self) {
+    for i in 0..3{
+      if self.current_state[i][0] != "" && self.current_state[i][0] == self.current_state[i][1] && self.current_state[i][1] == self.current_state[i][2] {
+        self.winner = self.current_state[i][0].clone();
+        // return true;
+        break;
+      }
+    }
+    // return false;
+  }
+  fn is_vertical_win(&mut self) {
+    for i in 0..3 {
+      if self.current_state[0][i] != "" && self.current_state[0][i] == self.current_state[1][i] && self.current_state[1][i] == self.current_state[2][i] {
+        self.winner = self.current_state[0][i].clone();
+        // return true;
+        break;
+      }
+    }
+    // return false;
+  }
+  pub fn find_winner(&mut self) {
+    // TODO NATIVE FIND BETTER SOLUTION
+    self.is_diagonal_win();
+    self.is_across_win();
+    self.is_vertical_win();
   }
 }
